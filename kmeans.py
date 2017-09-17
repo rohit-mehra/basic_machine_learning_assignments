@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Assignment 1: UTSA CS 6243/4593 Machine Learning Fall 2017"""
 
 import random
