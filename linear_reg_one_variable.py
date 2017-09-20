@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Assignment 2: UTSA CS 6243/4593 Machine Learning Fall 2017"""
+"""Assignment 2: UTSA CS 6243/4593 Machine Learning Fall 2017
+Non Vectorized Implementaion of Simple Linear Regression"""
 
 import random
 import matplotlib.pyplot as plt
@@ -13,25 +14,26 @@ def init_parameters():
     return {'w': random.uniform(-1, 1) * 0.001, 'b': 0}
 
 
-def forward_propagation(x, parameters):
+def forward_step(x, parameters):
     """get prediction"""
     y_hat = parameters['w'] * x + parameters['b']
     return y_hat
 
 
-def cost(y_hat, y):
-    """calc loss"""
-    return -(y - y_hat)
+def dcost(y_hat, y):
+    """calc dloss, where loss = (y_hat - y)^2 """
+    return y_hat - y
 
 
-def backward_propagation(x, y, y_hat):
+def backward_step(x, y, y_hat):
     """calc grads"""
-    j = cost(y_hat, y) / abs(cost(y_hat, y))
-    grads = {'dw': j * x, 'db': j}
+    dj = dcost(y_hat, y)
+    grads = {'dw': dj * x, 'db': dj}
     return grads
 
 
 def update_parameters(parameters, grads, learning_rate):
+    """update parameters using grads"""
     w = parameters['w'] - learning_rate * grads['dw']
     b = parameters['b'] - learning_rate * grads['db']
 
@@ -40,7 +42,7 @@ def update_parameters(parameters, grads, learning_rate):
 
 def train(train_x, train_y):
     parameters = init_parameters()
-    learning_rate = 0.1
+    learning_rate = 0.01
     num_epochs = 10000
     for i in range(num_epochs):
 
@@ -50,8 +52,8 @@ def train(train_x, train_y):
 
         # minibatch size = 1
         for x, y in zip(train_x, train_y):
-            y_hat = forward_propagation(x, parameters)
-            grads = backward_propagation(x, y, y_hat)
+            y_hat = forward_step(x, parameters)
+            grads = backward_step(x, y, y_hat)
             parameters = update_parameters(parameters, grads, learning_rate)
 
     return parameters
@@ -76,13 +78,13 @@ if __name__ == '__main__':
     # get trained/estimated parameters for linear function
     parameters = train(train_x, train_y)
     print(parameters)
-    """{'w': 0.8669155873576103, 'b': 2.8221363164400555}"""
+    """FUNCTION: {'w': 0.8169218286672496, 'b': 3.765508179397935}"""
 
     # predict on test data
     test_y = get_y(test_x, parameters)
 
     print(test_y)
-    """[19.12014935876313, 16.346019479218775, 18.33992533014128]"""
+    """TEST Ys: [19.12363855834223, 16.509488706607026, 18.388408912541703]"""
 
     # plot train data, test data and learnt function
     fig = plt.figure()
