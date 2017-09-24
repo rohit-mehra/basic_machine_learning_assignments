@@ -94,4 +94,5 @@ if __name__ == '__main__':
 
     x = list(range(-1, 21))
     ax.plot(x, get_y(x, parameters), 'b')
+    plt.savefig('lineg.png')
     plt.show()
